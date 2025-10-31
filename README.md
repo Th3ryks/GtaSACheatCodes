@@ -28,15 +28,14 @@ A modern, responsive web application for browsing and searching GTA San Andreas 
 ## 📁 Project Structure
 
 ```
-├── index.html      # Main HTML structure
-├── style.css       # Styles with theme support
-├── app.js          # JavaScript functionality
-├── computer.json   # Computer/Phone cheat codes
-├── phone.json      # Phone cheat codes (same as computer)
-├── ps.json         # PlayStation cheat codes
-├── README.md       # This file
-├── .gitignore      # Git ignore rules
-└── LICENSE         # MIT License
+├── index.html           # Main HTML structure
+├── style.css            # Styles with theme support
+├── app.js               # JavaScript functionality
+├── computer_phone.json  # Computer/Phone cheat codes
+├── ps.json              # PlayStation cheat codes
+├── README.md            # This file
+├── .gitignore           # Git ignore rules
+└── LICENSE              # MIT License
 ```
 
 ## 🎯 Usage
