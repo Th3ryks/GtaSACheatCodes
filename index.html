@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GTA San Andreas Cheat Codes</title>
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -13,11 +15,17 @@
             <div class="header-content">
                 <h1 class="logo">
                     <i class="fas fa-gamepad"></i>
-                    GTA San Andreas Cheats
+                    <span data-translate="site-title">GTA San Andreas Cheats</span>
                 </h1>
-                <button class="theme-toggle" id="themeToggle">
-                    <i class="fas fa-sun"></i>
-                </button>
+                <div class="header-controls">
+                    <button class="language-toggle" id="languageToggle">
+                        <i class="fas fa-language"></i>
+                        <span id="currentLang">EN</span>
+                    </button>
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-sun"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </header>
@@ -25,16 +33,16 @@
     <main class="main">
         <div class="container">
             <section class="platform-section">
-                <h2>Select Platform</h2>
+                <h2 data-translate="select-platform">Select Platform</h2>
                 <div class="platform-buttons">
                     <button class="platform-btn active" data-platform="computer">
                         <i class="fas fa-desktop"></i>
                         <i class="fas fa-mobile-alt"></i>
-                        Computer/Phone
+                        <span data-translate="computer-phone">Computer/Phone</span>
                     </button>
                     <button class="platform-btn" data-platform="ps">
                         <i class="fab fa-playstation"></i>
-                        PlayStation
+                        <span data-translate="playstation">PlayStation</span>
                     </button>
                 </div>
             </section>
@@ -42,29 +50,29 @@
             <section class="controls-section">
                 <div class="search-container">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" id="searchInput" placeholder="Search cheat codes or effects..." class="search-input">
+                    <input type="text" id="searchInput" data-translate-placeholder="search-placeholder" placeholder="Search cheat codes or effects..." class="search-input">
                 </div>
                 
                 <div class="category-filter">
                     <select id="categoryFilter" class="category-select">
-                        <option value="all">All Categories</option>
-                        <option value="health">Health & Stats</option>
-                        <option value="weapons">Weapons</option>
-                        <option value="vehicles">Vehicles</option>
-                        <option value="weather">Weather</option>
-                        <option value="gameplay">Gameplay</option>
-                        <option value="spawn">Spawn Items</option>
-                        <option value="people">People & NPCs</option>
-                        <option value="wanted">Wanted Level</option>
+                        <option value="all" data-translate="all-categories">All Categories</option>
+                        <option value="health" data-translate="health-stats">Health & Stats</option>
+                        <option value="weapons" data-translate="weapons">Weapons</option>
+                        <option value="vehicles" data-translate="vehicles">Vehicles</option>
+                        <option value="weather" data-translate="weather">Weather</option>
+                        <option value="gameplay" data-translate="gameplay">Gameplay</option>
+                        <option value="spawn" data-translate="spawn-items">Spawn Items</option>
+                        <option value="people" data-translate="people-npcs">People & NPCs</option>
+                        <option value="wanted" data-translate="wanted-level">Wanted Level</option>
                     </select>
                 </div>
             </section>
 
             <section class="cheats-section">
                 <div class="cheats-header">
-                    <h2 id="platformTitle">Computer Cheats</h2>
+                    <h2 id="platformTitle" data-translate="computer-cheats">Computer Cheats</h2>
                     <div class="results-count">
-                        <span id="resultsCount">0</span> cheats found
+                        <span id="resultsCount">0</span> <span data-translate="cheats-found">cheat codes found</span>
                     </div>
                 </div>
                 
@@ -73,8 +81,8 @@
                 
                 <div class="no-results" id="noResults" style="display: none;">
                     <i class="fas fa-search"></i>
-                    <h3>No cheats found</h3>
-                    <p>Try adjusting your search or filter criteria</p>
+                    <h3 data-translate="no-cheats-found">No cheat codes found</h3>
+                    <p data-translate="adjust-search">Try adjusting your search or filter criteria</p>
                 </div>
             </section>
         </div>

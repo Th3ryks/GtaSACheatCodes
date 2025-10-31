@@ -4,9 +4,57 @@ let allCheats = {
 };
 
 let currentPlatform = 'computer';
+let currentLanguage = 'en';
 let filteredCheats = [];
 
+const translations = {
+    en: {
+        'site-title': 'GTA San Andreas Cheat Codes',
+        'select-platform': 'Select Platform',
+        'computer-phone': 'Computer/Phone',
+        'playstation': 'PlayStation',
+        'search-placeholder': 'Search cheat codes...',
+        'all-categories': 'All Categories',
+        'health-stats': 'Health & Stats',
+        'weapons': 'Weapons',
+        'vehicles': 'Vehicles',
+        'weather': 'Weather',
+        'gameplay': 'Gameplay',
+        'spawn-items': 'Spawn Items',
+        'people-npcs': 'People & NPCs',
+        'wanted-level': 'Wanted Level',
+        'computer-cheats': 'Computer/Phone Cheats Codes',
+        'playstation-cheats': 'PlayStation Cheat Codes',
+        'cheats-found': 'Cheat codes found',
+        'no-cheats-found': 'No cheat codes found',
+        'adjust-search': 'Try adjusting your search or filter criteria'
+    },
+    ru: {
+        'site-title': 'Чит Коды GTA San Andreas',
+        'select-platform': 'Выберите платформу',
+        'computer-phone': 'Компьютер/Телефон',
+        'playstation': 'PlayStation',
+        'search-placeholder': 'Поиск чит кодов...',
+        'all-categories': 'Все категории',
+        'health-stats': 'Здоровье и характеристики',
+        'weapons': 'Оружие',
+        'vehicles': 'Транспорт',
+        'weather': 'Погода',
+        'gameplay': 'Игровой процесс',
+        'spawn-items': 'Создание предметов',
+        'people-npcs': 'Люди и NPC',
+        'wanted-level': 'Уровень розыска',
+        'computer-cheats': 'Чит коды для Компьютера/Телефона',
+        'playstation-cheats': 'Чит коды для PlayStation',
+        'cheats-found': 'чит кодов найдено',
+        'no-cheats-found': 'Чит коды не найдены',
+        'adjust-search': 'Попробуйте изменить критерии поиска или фильтра'
+    }
+};
+
 const themeToggle = document.getElementById('themeToggle');
+const languageToggle = document.getElementById('languageToggle');
+const currentLangSpan = document.getElementById('currentLang');
 const platformButtons = document.querySelectorAll('.platform-btn');
 const searchInput = document.getElementById('searchInput');
 const categoryFilter = document.getElementById('categoryFilter');
@@ -19,6 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadAllCheats();
     initializeEventListeners();
     initializeTheme();
+    initializeLanguage();
     displayCheats();
 });
 
@@ -45,40 +94,46 @@ function categorizeAllCheats() {
     Object.keys(allCheats).forEach(platform => {
         allCheats[platform] = allCheats[platform].map(cheat => ({
             ...cheat,
-            category: categorizeCheat(cheat.effect)
+            category: categorizeCheat(cheat.effect_en)
         }));
     });
 }
 
-function categorizeCheat(effect) {
-    const effectLower = effect.toLowerCase();
+function categorizeCheat(effectEn) {
+    const effectLower = effectEn.toLowerCase();
     
     if (effectLower.includes('health') || effectLower.includes('armor') || 
         effectLower.includes('stamina') || effectLower.includes('respect') || 
         effectLower.includes('appeal') || effectLower.includes('body') || 
-        effectLower.includes('hungry') || effectLower.includes('oxygen')) {
+        effectLower.includes('hungry') || effectLower.includes('oxygen') ||
+        effectLower.includes('god mode') || effectLower.includes('infinite health') ||
+        effectLower.includes('muscle') || effectLower.includes('fat') || 
+        effectLower.includes('skinny') || effectLower.includes('lung capacity')) {
         return 'health';
     }
     
     if (effectLower.includes('weapon') || effectLower.includes('ammo') || 
         effectLower.includes('gun') || effectLower.includes('rocket') || 
-        effectLower.includes('hitman')) {
+        effectLower.includes('hitman') || effectLower.includes('pistol') ||
+        effectLower.includes('rifle') || effectLower.includes('shotgun') ||
+        effectLower.includes('grenade') || effectLower.includes('ak-47') ||
+        effectLower.includes('m4') || effectLower.includes('desert eagle') ||
+        effectLower.includes('reload') || effectLower.includes('shoot')) {
         return 'weapons';
     }
     
-    if (effectLower.includes('spawn') && (effectLower.includes('car') || 
-        effectLower.includes('tank') || effectLower.includes('bike') || 
-        effectLower.includes('plane') || effectLower.includes('boat') || 
-        effectLower.includes('helicopter') || effectLower.includes('vehicle') ||
-        effectLower.includes('rhino') || effectLower.includes('hydra') || 
-        effectLower.includes('hunter') || effectLower.includes('jetpack'))) {
+    if (effectLower.includes('spawn') || effectLower.includes('get ') ||
+        effectLower.includes('parachute') || effectLower.includes('jetpack')) {
         return 'spawn';
     }
     
     if (effectLower.includes('car') || effectLower.includes('vehicle') || 
         effectLower.includes('driving') || effectLower.includes('handling') || 
         effectLower.includes('nitro') || effectLower.includes('traffic') || 
-        effectLower.includes('flying') && effectLower.includes('car')) {
+        effectLower.includes('tank') || effectLower.includes('rhino') ||
+        effectLower.includes('hydra') || effectLower.includes('hunter') ||
+        effectLower.includes('helicopter') || effectLower.includes('jet') ||
+        effectLower.includes('plane') || effectLower.includes('racecar')) {
         return 'vehicles';
     }
     
@@ -86,19 +141,20 @@ function categorizeCheat(effect) {
         effectLower.includes('rain') || effectLower.includes('fog') || 
         effectLower.includes('storm') || effectLower.includes('sand') || 
         effectLower.includes('midnight') || effectLower.includes('clock') || 
-        effectLower.includes('sky')) {
+        effectLower.includes('sky') || effectLower.includes('time')) {
         return 'weather';
     }
     
     if (effectLower.includes('wanted') || effectLower.includes('police') || 
-        effectLower.includes('star')) {
+        effectLower.includes('star') || effectLower.includes('never wanted') ||
+        effectLower.includes('clear wanted') || effectLower.includes('increase wanted')) {
         return 'wanted';
     }
     
     if (effectLower.includes('people') || effectLower.includes('pedestrian') || 
-        effectLower.includes('elvis') || effectLower.includes('attack') || 
+        effectLower.includes('everyone') || effectLower.includes('attack') || 
         effectLower.includes('riot') || effectLower.includes('gang') || 
-        effectLower.includes('recruit')) {
+        effectLower.includes('recruit') || effectLower.includes('has guns')) {
         return 'people';
     }
     
@@ -107,6 +163,7 @@ function categorizeCheat(effect) {
 
 function initializeEventListeners() {
     themeToggle.addEventListener('click', toggleTheme);
+    languageToggle.addEventListener('click', toggleLanguage);
     
     platformButtons.forEach(button => {
         button.addEventListener('click', (e) => {
@@ -116,7 +173,6 @@ function initializeEventListeners() {
     });
     
     searchInput.addEventListener('input', debounce(handleSearch, 300));
-    
     categoryFilter.addEventListener('change', handleCategoryFilter);
 }
 
@@ -124,6 +180,13 @@ function initializeTheme() {
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.body.className = `${savedTheme}-theme`;
     updateThemeIcon(savedTheme);
+}
+
+function initializeLanguage() {
+    const savedLanguage = localStorage.getItem('language') || 'en';
+    currentLanguage = savedLanguage;
+    updateLanguageDisplay();
+    translatePage();
 }
 
 function toggleTheme() {
@@ -135,9 +198,46 @@ function toggleTheme() {
     updateThemeIcon(newTheme);
 }
 
+function toggleLanguage() {
+    currentLanguage = currentLanguage === 'en' ? 'ru' : 'en';
+    localStorage.setItem('language', currentLanguage);
+    updateLanguageDisplay();
+    translatePage();
+    displayCheats();
+}
+
 function updateThemeIcon(theme) {
     const icon = themeToggle.querySelector('i');
     icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+}
+
+function updateLanguageDisplay() {
+    currentLangSpan.textContent = currentLanguage.toUpperCase();
+}
+
+function translatePage() {
+    const elementsToTranslate = document.querySelectorAll('[data-translate]');
+    elementsToTranslate.forEach(element => {
+        const key = element.getAttribute('data-translate');
+        if (translations[currentLanguage][key]) {
+            element.textContent = translations[currentLanguage][key];
+        }
+    });
+    
+    const placeholderElements = document.querySelectorAll('[data-translate-placeholder]');
+    placeholderElements.forEach(element => {
+        const key = element.getAttribute('data-translate-placeholder');
+        if (translations[currentLanguage][key]) {
+            element.placeholder = translations[currentLanguage][key];
+        }
+    });
+    
+    updatePlatformTitle();
+}
+
+function updatePlatformTitle() {
+    const titleKey = currentPlatform === 'computer' ? 'computer-cheats' : 'playstation-cheats';
+    platformTitle.textContent = translations[currentLanguage][titleKey];
 }
 
 function switchPlatform(platform) {
@@ -146,11 +246,7 @@ function switchPlatform(platform) {
     platformButtons.forEach(btn => btn.classList.remove('active'));
     document.querySelector(`[data-platform="${platform}"]`).classList.add('active');
     
-    const titles = {
-        computer: 'Computer/Phone Cheats',
-        ps: 'PlayStation Cheats'
-    };
-    platformTitle.textContent = titles[platform];
+    updatePlatformTitle();
     
     searchInput.value = '';
     categoryFilter.value = 'all';
@@ -172,10 +268,11 @@ function displayCheats() {
     let cheats = [...allCheats[currentPlatform]];
     
     if (searchTerm) {
-        cheats = cheats.filter(cheat => 
-            cheat.code.toLowerCase().includes(searchTerm) ||
-            cheat.effect.toLowerCase().includes(searchTerm)
-        );
+        cheats = cheats.filter(cheat => {
+            const effectText = currentLanguage === 'en' ? cheat.effect_en : cheat.effect_ru;
+            return cheat.code.toLowerCase().includes(searchTerm) ||
+                   effectText.toLowerCase().includes(searchTerm);
+        });
     }
     
     if (selectedCategory !== 'all') {
@@ -204,15 +301,30 @@ function renderCheats(cheats) {
 
 function createCheatCard(cheat) {
     const categoryNames = {
-        health: 'Health & Stats',
-        weapons: 'Weapons',
-        vehicles: 'Vehicles',
-        weather: 'Weather',
-        gameplay: 'Gameplay',
-        spawn: 'Spawn Items',
-        people: 'People & NPCs',
-        wanted: 'Wanted Level'
+        en: {
+            health: 'Health & Stats',
+            weapons: 'Weapons',
+            vehicles: 'Vehicles',
+            weather: 'Weather',
+            gameplay: 'Gameplay',
+            spawn: 'Spawn Items',
+            people: 'People & NPCs',
+            wanted: 'Wanted Level'
+        },
+        ru: {
+            health: 'Здоровье и характеристики',
+            weapons: 'Оружие',
+            vehicles: 'Транспорт',
+            weather: 'Погода',
+            gameplay: 'Игровой процесс',
+            spawn: 'Создание предметов',
+            people: 'Люди и NPC',
+            wanted: 'Уровень розыска'
+        }
     };
+    
+    const effectText = currentLanguage === 'en' ? cheat.effect_en : cheat.effect_ru;
+    const categoryName = categoryNames[currentLanguage][cheat.category] || 'Other';
     
     const copyButton = currentPlatform === 'ps' ? '' : `
         <button class="copy-btn" data-code="${escapeHtml(cheat.code)}">
@@ -226,8 +338,8 @@ function createCheatCard(cheat) {
                 ${escapeHtml(cheat.code)}
                 ${copyButton}
             </div>
-            <div class="cheat-effect">${escapeHtml(cheat.effect)}</div>
-            <div class="cheat-category">${categoryNames[cheat.category] || 'Other'}</div>
+            <div class="cheat-effect">${escapeHtml(effectText)}</div>
+            <div class="cheat-category">${categoryName}</div>
         </div>
     `;
 }
@@ -328,24 +440,10 @@ document.addEventListener('keydown', (e) => {
 
 document.documentElement.style.scrollBehavior = 'smooth';
 
-const observerOptions = {
-    root: null,
-    rootMargin: '50px',
-    threshold: 0.1
-};
-
-function showLoading() {
-    cheatsGrid.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
-            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-color);"></i>
-            <p style="margin-top: 1rem; color: var(--text-secondary);">Loading cheats...</p>
-        </div>
-    `;
-}
-
 console.log(`
 🎮 GTA San Andreas Cheat Codes Website
 🚀 Loaded successfully!
 💡 Press Ctrl/Cmd + K to focus search
 🌙 Theme: ${document.body.classList.contains('dark-theme') ? 'Dark' : 'Light'}
+🌍 Language: ${currentLanguage.toUpperCase()}
 `);
