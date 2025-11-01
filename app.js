@@ -80,85 +80,12 @@ async function loadAllCheats() {
 
         allCheats.computer = await computerPhoneResponse.json();
         allCheats.ps = await psResponse.json();
-
-        categorizeAllCheats();
         
         console.log('All cheats loaded successfully');
     } catch (error) {
         console.error('Error loading cheat data:', error);
         showError('Failed to load cheat codes. Please refresh the page.');
     }
-}
-
-function categorizeAllCheats() {
-    Object.keys(allCheats).forEach(platform => {
-        allCheats[platform] = allCheats[platform].map(cheat => ({
-            ...cheat,
-            category: categorizeCheat(cheat.effect_en)
-        }));
-    });
-}
-
-function categorizeCheat(effectEn) {
-    const effectLower = effectEn.toLowerCase();
-    
-    if (effectLower.includes('health') || effectLower.includes('armor') || 
-        effectLower.includes('stamina') || effectLower.includes('respect') || 
-        effectLower.includes('appeal') || effectLower.includes('body') || 
-        effectLower.includes('hungry') || effectLower.includes('oxygen') ||
-        effectLower.includes('god mode') || effectLower.includes('infinite health') ||
-        effectLower.includes('muscle') || effectLower.includes('fat') || 
-        effectLower.includes('skinny') || effectLower.includes('lung capacity')) {
-        return 'health';
-    }
-    
-    if (effectLower.includes('weapon') || effectLower.includes('ammo') || 
-        effectLower.includes('gun') || effectLower.includes('rocket') || 
-        effectLower.includes('hitman') || effectLower.includes('pistol') ||
-        effectLower.includes('rifle') || effectLower.includes('shotgun') ||
-        effectLower.includes('grenade') || effectLower.includes('ak-47') ||
-        effectLower.includes('m4') || effectLower.includes('desert eagle') ||
-        effectLower.includes('reload') || effectLower.includes('shoot')) {
-        return 'weapons';
-    }
-    
-    if (effectLower.includes('spawn') || effectLower.includes('get ') ||
-        effectLower.includes('parachute') || effectLower.includes('jetpack')) {
-        return 'spawn';
-    }
-    
-    if (effectLower.includes('car') || effectLower.includes('vehicle') || 
-        effectLower.includes('driving') || effectLower.includes('handling') || 
-        effectLower.includes('nitro') || effectLower.includes('traffic') || 
-        effectLower.includes('tank') || effectLower.includes('rhino') ||
-        effectLower.includes('hydra') || effectLower.includes('hunter') ||
-        effectLower.includes('helicopter') || effectLower.includes('jet') ||
-        effectLower.includes('plane') || effectLower.includes('racecar')) {
-        return 'vehicles';
-    }
-    
-    if (effectLower.includes('weather') || effectLower.includes('sunny') || 
-        effectLower.includes('rain') || effectLower.includes('fog') || 
-        effectLower.includes('storm') || effectLower.includes('sand') || 
-        effectLower.includes('midnight') || effectLower.includes('clock') || 
-        effectLower.includes('sky') || effectLower.includes('time')) {
-        return 'weather';
-    }
-    
-    if (effectLower.includes('wanted') || effectLower.includes('police') || 
-        effectLower.includes('star') || effectLower.includes('never wanted') ||
-        effectLower.includes('clear wanted') || effectLower.includes('increase wanted')) {
-        return 'wanted';
-    }
-    
-    if (effectLower.includes('people') || effectLower.includes('pedestrian') || 
-        effectLower.includes('everyone') || effectLower.includes('attack') || 
-        effectLower.includes('riot') || effectLower.includes('gang') || 
-        effectLower.includes('recruit') || effectLower.includes('has guns')) {
-        return 'people';
-    }
-    
-    return 'gameplay';
 }
 
 function initializeEventListeners() {
@@ -276,7 +203,22 @@ function displayCheats() {
     }
     
     if (selectedCategory !== 'all') {
-        cheats = cheats.filter(cheat => cheat.category === selectedCategory);
+        cheats = cheats.filter(cheat => {
+            const categoryField = currentLanguage === 'en' ? cheat.category_en : cheat.category_ru;
+            
+            const categoryMapping = {
+                'health': currentLanguage === 'en' ? 'health' : 'здоровье',
+                'weapons': currentLanguage === 'en' ? 'weapons' : 'оружие',
+                'vehicles': currentLanguage === 'en' ? 'vehicles' : 'транспорт',
+                'weather': currentLanguage === 'en' ? 'weather' : 'погода',
+                'gameplay': currentLanguage === 'en' ? 'gameplay' : 'геймплей',
+                'spawn': currentLanguage === 'en' ? 'spawn' : 'создание',
+                'people': currentLanguage === 'en' ? 'people' : 'люди',
+                'wanted': currentLanguage === 'en' ? 'wanted' : 'розыск'
+            };
+            
+            return categoryField === categoryMapping[selectedCategory];
+        });
     }
     
     filteredCheats = cheats;
@@ -312,19 +254,20 @@ function createCheatCard(cheat) {
             wanted: 'Wanted Level'
         },
         ru: {
-            health: 'Здоровье и характеристики',
-            weapons: 'Оружие',
-            vehicles: 'Транспорт',
-            weather: 'Погода',
-            gameplay: 'Игровой процесс',
-            spawn: 'Создание предметов',
-            people: 'Люди и NPC',
-            wanted: 'Уровень розыска'
+            здоровье: 'Здоровье и характеристики',
+            оружие: 'Оружие',
+            транспорт: 'Транспорт',
+            погода: 'Погода',
+            геймплей: 'Игровой процесс',
+            создание: 'Создание предметов',
+            люди: 'Люди и NPC',
+            розыск: 'Уровень розыска'
         }
     };
     
     const effectText = currentLanguage === 'en' ? cheat.effect_en : cheat.effect_ru;
-    const categoryName = categoryNames[currentLanguage][cheat.category] || 'Other';
+    const categoryField = currentLanguage === 'en' ? cheat.category_en : cheat.category_ru;
+    const categoryName = categoryNames[currentLanguage][categoryField] || 'Other';
     
     const copyButton = currentPlatform === 'ps' ? '' : `
         <button class="copy-btn" data-code="${escapeHtml(cheat.code)}">
